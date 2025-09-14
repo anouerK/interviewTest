@@ -12,8 +12,8 @@ export type FavoriteRequest = {
 
 export async function toggleFavorite(
   request: FavoriteRequest
-): Promise<Favorite> {
-  const { error, data } = await supabase
+): Promise<void> {
+  const {  data } = await supabase
     .from("favorites")
     .select()
     .eq("client_id", import.meta.env.VITE_CLIENT_ID as string)
@@ -27,6 +27,7 @@ export async function toggleFavorite(
       .eq("client_id", import.meta.env.VITE_CLIENT_ID as string)
       .eq("item_id", request.item_id);
     if (deleteError) {
+        console.log("Delete Error:", deleteError);
       throw new Error(deleteError.message);
     }
   } else {
@@ -35,18 +36,18 @@ export async function toggleFavorite(
       item_id: request.item_id,
     });
     if (insertError) {
+      console.log("Insert Error:", insertError);
       throw new Error(insertError.message);
     }
   }
-  return data as Favorite;
 }
 
 export async function fetchFavorites(): Promise<Favorite[]> {
-  const { error, data } = await supabase.from("favorites").select("*");
+  const { error, data } = await supabase.from("favorites").select("*").eq("client_id", import.meta.env.VITE_CLIENT_ID as string);
   if (error) {
     throw new Error(error.message);
   }
-  return data as Favorite[];
+  return data ? data as Favorite[] : [];
 }
 
 export async function deleteFavorite(id: number): Promise<void> {

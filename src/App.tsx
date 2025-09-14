@@ -4,6 +4,8 @@ import { Item } from "./api/items/itemService";
 import { useAddItem, useItems } from "./api/items/itemsHooks";
 import { useState } from "react";
 import { useFavorites, useToggleFavorite } from "./api/favorites/favoriteHooks";
+import debouce from "lodash.debounce";
+
 function App() {
   const queryClient = new QueryClient();
   /*
@@ -15,6 +17,7 @@ function App() {
   } = useForm({
     resolver: zodResolver(ItemAddSchema),
   });*/
+
   const [searchTerm, setSearchTerm] = useState("");
   const [sortingOptionRating, setSortingOptionRating] = useState("asc");
   const [sortingOptionTitle, setSortingOptionTitle] = useState("asc");
@@ -51,7 +54,7 @@ function App() {
   function getStatus(item: Item) {
     if (
       favorites &&
-      favorites.find((fav) => fav.item_id === item.id.toString())
+      favorites.find((fav) => fav.item_id == item.id.toString())
     ) {
       return " (Favorite)";
     } else {
@@ -61,13 +64,27 @@ function App() {
   function handleToggleFavorite(item: Item) {
     toggleFavorite({ item_id: item.id.toString() });
   }
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const debouncedResults = useMemo(() => {
+    return debouce(handleChange, 300);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <input
           type="text"
           placeholder="Search..."
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={debouncedResults}
         />
         <h1>
           {" "}
@@ -130,8 +147,8 @@ function App() {
               .filter((item: Item) => item.title.includes(searchTerm))
               .map((item) => (
                 <li key={item.id}>
-                  {item.title} - {item.category} - {item.rating} -{" "}
-                  <button onClick={() => handleToggleFavorite(item)}>
+                  [{item.id}] {item.title} - {item.category} - {item.rating} -{" "}
+                  <button  onClick={() => handleToggleFavorite(item)}>
                     {getStatus(item)}
                   </button>
                 </li>

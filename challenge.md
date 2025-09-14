@@ -33,10 +33,10 @@
 
 4. **Favorites (optimistic)**
    * A star button toggles favorite for the current `VITE_CLIENT_ID`.
-   * **Optimistic UI**: update immediately; rollback if the request fails. Persist to `favorites`.
+   * **Optimistic UI**: update immediately; rollback if the request fails. Persist to `favorites`. --
 
 5. **States & Accessibility**
-   * Show loading, error, and empty states.
+   * Show loading, error, and empty states. 
    * Ensure controls are keyboard accessible; star button should reflect its state (e.g., `aria-pressed`).
 
 6. **Type Safety & Structure**

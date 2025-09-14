@@ -5,6 +5,7 @@ export function useFavorites() {
   return useQuery<Favorite[]>({
     queryKey: ["favorities"],
     queryFn: () => fetchFavorites(),
+    
   });
 }
 
