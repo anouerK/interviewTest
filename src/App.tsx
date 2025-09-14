@@ -88,8 +88,7 @@ function App() {
         />
         <h1>
           {" "}
-          Sorting By  :{" "}
-          {sortingOptionField == "rating" ? "Rating" : "Title"}
+          Sorting By : {sortingOptionField == "rating" ? "Rating" : "Title"}
           <input
             type="checkbox"
             onClick={() => {
@@ -104,8 +103,7 @@ function App() {
 
         <h1>
           {" "}
-          Sorting  :{" "}
-          {sortingOptionOrder == "asc" ? "Ascending" : "Descending"}
+          Sorting : {sortingOptionOrder == "asc" ? "Ascending" : "Descending"}
           <input
             type="checkbox"
             onClick={() => {
@@ -141,19 +139,21 @@ function App() {
         </form> */}
         {itemsLoading && <p>Loading...</p>}
         {itemsError && <p>Error: {(itemsError as Error).message}</p>}
-        {items && (
+        {items?.length >= 1 ? (
           <ul>
             {paginateArray(items, 10, currentPage)
               .filter((item: Item) => item.title.includes(searchTerm))
               .map((item) => (
                 <li key={item.id}>
                   [{item.id}] {item.title} - {item.category} - {item.rating} -{" "}
-                  <button  onClick={() => handleToggleFavorite(item)}>
+                  <button onClick={() => handleToggleFavorite(item)}>
                     {getStatus(item)}
                   </button>
                 </li>
               ))}
           </ul>
+        ) : (
+          !itemsLoading && <p>No items found.</p>
         )}
 
         <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
