@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Item, fetchItems, ItemAddRequest, addItem } from "./itemService";
 
-export function  useItems({sortingOptionRating, sortingOptionTitle}: {sortingOptionRating: string, sortingOptionTitle: string})     {
+export function  useItems({sortingOptionField, sortingOptionOrder }: {sortingOptionField: string, sortingOptionOrder: string})     {
   return useQuery<Item[]>({
-    queryKey: ["items", { sortingOptionRating, sortingOptionTitle }],
-    queryFn: () => fetchItems({ title: sortingOptionTitle, rating: sortingOptionRating }),
+    queryKey: ["items", { sortingOptionField, sortingOptionOrder }],
+    queryFn: () => fetchItems({ sortingOptionField, sortingOptionOrder }),
   });
 }
 

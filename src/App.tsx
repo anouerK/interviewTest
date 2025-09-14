@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Item } from "./api/items/itemService";
 import { useAddItem, useItems } from "./api/items/itemsHooks";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFavorites, useToggleFavorite } from "./api/favorites/favoriteHooks";
 import debouce from "lodash.debounce";
 
@@ -19,8 +19,8 @@ function App() {
   });*/
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortingOptionRating, setSortingOptionRating] = useState("asc");
-  const [sortingOptionTitle, setSortingOptionTitle] = useState("asc");
+  const [sortingOptionField, setSortingOptionField] = useState("rating");
+  const [sortingOptionOrder, setSortingOptionOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const { mutate: addItem } = useAddItem();
   const { mutate: toggleFavorite } = useToggleFavorite();
@@ -29,7 +29,7 @@ function App() {
     data: items,
     error: itemsError,
     isLoading: itemsLoading,
-  } = useItems({ sortingOptionRating, sortingOptionTitle });
+  } = useItems({ sortingOptionField, sortingOptionOrder });
 
   const { data: favorites, error: favoritesError } = useFavorites();
 
@@ -88,15 +88,15 @@ function App() {
         />
         <h1>
           {" "}
-          Sorting Title :{" "}
-          {sortingOptionTitle == "asc" ? "Ascending" : "Descending"}
+          Sorting By  :{" "}
+          {sortingOptionField == "rating" ? "Rating" : "Title"}
           <input
             type="checkbox"
             onClick={() => {
-              if (sortingOptionTitle == "asc") {
-                setSortingOptionTitle("desc");
+              if (sortingOptionField == "rating") {
+                setSortingOptionField("title");
               } else {
-                setSortingOptionTitle("asc");
+                setSortingOptionField("rating");
               }
             }}
           />
@@ -104,15 +104,15 @@ function App() {
 
         <h1>
           {" "}
-          Sorting Rating :{" "}
-          {sortingOptionRating == "asc" ? "Ascending" : "Descending"}
+          Sorting  :{" "}
+          {sortingOptionOrder == "asc" ? "Ascending" : "Descending"}
           <input
             type="checkbox"
             onClick={() => {
-              if (sortingOptionRating == "asc") {
-                setSortingOptionRating("desc");
+              if (sortingOptionOrder == "asc") {
+                setSortingOptionOrder("desc");
               } else {
-                setSortingOptionRating("asc");
+                setSortingOptionOrder("asc");
               }
             }}
           />

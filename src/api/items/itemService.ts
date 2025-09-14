@@ -22,12 +22,11 @@ export type ItemAddRequest = {
   rating: number;
 };
 
-export async function fetchItems(sort: { title: string; rating: string}): Promise<Item[]> {
+export async function fetchItems(sort: { sortingOptionField: string; sortingOptionOrder: string}): Promise<Item[]> {
   const { error, data } = await supabase
     .from("items")
     .select("*")
-    .order("title", { ascending: sort.title === "asc" })
-    .order("rating", { ascending: sort.rating === "asc" });
+    .order(sort.sortingOptionField, { ascending: sort.sortingOptionOrder === "asc" })
   if (error) {
     throw new Error(error.message);
   }
